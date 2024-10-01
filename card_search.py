@@ -4,9 +4,10 @@ from discord.ext import commands
 import requests
 import re
 
-
+intents = discord.Intents.default()
+intents.message_content = True
 description = 'description'
-bot = commands.Bot(command_prefix='!', description=description)
+bot = commands.Bot(command_prefix='!', description=description, intents=intents)
 
 TOKEN = 'token'
 
@@ -20,14 +21,22 @@ async def on_ready():
 
 
 @bot.command()
-async def card(ctx, key):
+async def card(ctx, *, key):
     noti = await ctx.send('Solgeがカードを検索しています。しばらくお待ちください。')
 
     URL = 'https://dm.takaratomy.co.jp/card/'
-    data = {'keyword': key}
+    headers = {'X-Requested-With': 'XMLHttpRequest'}
+    data = {
+        'suggest': 'on',
+        'keyword': key,
+        'keyword_type[]': ['card_name', 'card_ruby', 'card_text'],
+        'culture_cond[]': ['単色', '多色'],
+        'pagenum': 1,
+        'sort': 'release_new'
+    }
     imagePattern = re.compile('src="(.*?)"')
 
-    res = requests.post(URL, data=data)
+    res = requests.post(URL, headers=headers, data=data)
 
     bsObject = BeautifulSoup(res.text, 'html.parser')
     bsObject = bsObject.find('div', {'id': 'cardlist'})
@@ -64,7 +73,7 @@ async def card(ctx, key):
 
     else:
         embed = discord.Embed(title='『{}』のカード検索結果'.format(key), description='カードが検索されませんでした')
-
+    
     await noti.delete()
     await ctx.send(embed=embed)
 
