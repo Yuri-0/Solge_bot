@@ -45,5 +45,5 @@ python3 card_search.py
 5. Check the card search results that the bot has replied with in the chat window.
 
 | ![single card](src/single_card.png) | ![multiple cards](src/multiple_cards.png) | ![no card](src/no_card.png) |
-|---|---|---|
-| Example of a reply when a single card is found | Example of a reply when multiple cards are found | Example of a reply when no card is found |
+|:---:|:---:|:---:|
+| Example of a reply when a single card is found | Example of a reply when multiple cards are found</br>(Details for each card are provided as hyperlinks to the official website) | Example of a reply when no card is found |
